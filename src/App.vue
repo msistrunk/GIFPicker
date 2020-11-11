@@ -37,6 +37,23 @@ export default {
       .get('https://api.giphy.com/v1/gifs/random?api_key=pzOvipitP62VH7uZ5TvR03vFr7NAiNN2')
       .then(response => (this.results.push(response.data.data)))
   },
+  watch: {
+    searchInput: function () {
+      const vm = this;
+      if(vm.timeout) clearTimeout(vm.timeout);
+      vm.timeout = setTimeout(() => {
+        axios
+          .get('https://api.giphy.com/v1/gifs/search?api_key=pzOvipitP62VH7uZ5TvR03vFr7NAiNN2',{
+            params:{
+              q: vm.searchInput
+            }
+          })
+          .then(response => {
+            if(response.data.data.length > 0) vm.results = response.data.data
+          })
+      }, 500);
+    }
+  },
 }
 </script>
 

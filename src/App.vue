@@ -2,21 +2,40 @@
   <div id="app">
     <header>GIF Picker</header>
     <SearchInput v-model='searchInput' />
+    <SearchResults v-if='results' :results='results'/>
   </div>
 </template>
 
 <script>
-import SearchInput from './components/SearchInput.vue'
+import SearchInput from './components/SearchInput';
+import SearchResults from './components/SearchResults';
+import axios from 'axios';
 
 export default {
   name: 'App',
   components: {
-    SearchInput
+    SearchInput,
+    SearchResults
   },
   data(){
     return{
       searchInput: '',
+      results: [],
     }
+  },
+  mounted () {
+    // These api calls should be broken out into a helper 
+    // also this api key should be hidden and referenced from env variables
+    // Not all data is needed so we should also pull out only what we need
+    axios
+      .get('https://api.giphy.com/v1/gifs/random?api_key=pzOvipitP62VH7uZ5TvR03vFr7NAiNN2')
+      .then(response => (this.results.push(response.data.data)))
+    axios
+      .get('https://api.giphy.com/v1/gifs/random?api_key=pzOvipitP62VH7uZ5TvR03vFr7NAiNN2')
+      .then(response => (this.results.push(response.data.data)))
+    axios
+      .get('https://api.giphy.com/v1/gifs/random?api_key=pzOvipitP62VH7uZ5TvR03vFr7NAiNN2')
+      .then(response => (this.results.push(response.data.data)))
   },
 }
 </script>

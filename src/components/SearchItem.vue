@@ -47,6 +47,7 @@ export default {
   margin: 5px 5px 0px 5px
 }
 .video{
+  transition: .5s ease;
   object-fit: cover;
   border-radius: 10px;
 }

@@ -43,13 +43,15 @@ export default {
 <style scoped>
 .item{
   position: relative;
+  filter:drop-shadow(3px 3px 3px gray);
   cursor: pointer;
-  margin: 5px 5px 0px 5px
+  margin: 10px 10px 0px 10px
 }
 .video{
   transition: .5s ease;
   object-fit: cover;
   border-radius: 10px;
+  background-color:rgb(68, 69, 70);
 }
 .copyButton {
   transition: .5s ease;

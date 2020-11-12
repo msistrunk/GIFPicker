@@ -3,8 +3,8 @@
     <header>GIF Picker</header>
     <SearchInput v-model='searchInput' />
     <p v-if='giphyError' class='error'>{{ errorText }}</p>
-    <SearchResults v-if='results' :results='results'/>
     <div v-if='loading' class='loader'></div>
+    <SearchResults v-if='results' :results='results'/>
     <p v-if='endOfResults' class='error'>The End! <a href="#app">Jump to top of page</a></p>
   </div>
 </template>

@@ -75,7 +75,7 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   background-color: #e63b52;
   color: white;
-  font-size: smaller;
+  font-size: 20px;
   padding: 5px 5px;
   border-radius: 10px;
 }

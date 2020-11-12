@@ -25,7 +25,8 @@ export default {
   .container {
     display: flex;
     flex-wrap: wrap;
-    grid-template-columns: auto auto auto auto;
     justify-content: center;
+    width: 75%;
+    margin: auto;
   }
 </style>

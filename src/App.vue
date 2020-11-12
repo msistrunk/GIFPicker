@@ -65,7 +65,8 @@ export default {
         axios
           .get('https://api.giphy.com/v1/gifs/search?api_key=pzOvipitP62VH7uZ5TvR03vFr7NAiNN2',{
             params:{
-              q: vm.searchInput
+              q: vm.searchInput,
+              limit: 12
             }
           })
           .then(response => {
@@ -97,6 +98,7 @@ export default {
           .get('https://api.giphy.com/v1/gifs/search?api_key=pzOvipitP62VH7uZ5TvR03vFr7NAiNN2',{
             params:{
               q: this.searchInput,
+              limit:12,
               offset: (vm.pagination.offset + vm.pagination.count)
             }
           })

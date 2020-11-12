@@ -1,7 +1,8 @@
 <template>
   <div class='item' v-on:click='copyToClipboard(item.images.original.mp4)'>
-    <video class='video' width=200 height=200 autoplay loop :title=item.title playsInline muted> 
+    <video class='video' width=300 height=300 autoplay loop :title=item.title playsInline muted> 
       <source :src=item.images.original.mp4 type="video/mp4">
+      Your browser doesn't support the video tag.
     </video>
     <div class="copyButton">
       <transition name="bounce" mode="out-in">

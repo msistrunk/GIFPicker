@@ -2,6 +2,7 @@
   <div id="app">
     <header>GIF Picker</header>
     <SearchInput v-model='searchInput' />
+    <p v-if='giphyError' class='error'>{{ errorText }}</p>
     <SearchResults v-if='results' :results='results'/>
     <div v-if='loading' class='loader'></div>
   </div>
@@ -23,11 +24,14 @@ export default {
       searchInput: '',
       results: [],
       loading: false,
+      giphyError: false,
+      errorText: '',
     }
   },
   mounted () {
     const vm = this;
     vm.loading = true;
+    vm.giphyError = false;
     // These api calls should be broken out into a helper 
     // also this api key should be hidden and referenced from env variables
     // Not all data is needed so we should also pull out only what we need
@@ -38,10 +42,12 @@ export default {
         axios.get('https://api.giphy.com/v1/gifs/random?api_key=pzOvipitP62VH7uZ5TvR03vFr7NAiNN2')
       ])
       .then(responseArr => {
-        this.results.push(responseArr[0].data.data)
-        this.results.push(responseArr[1].data.data)
-        this.results.push(responseArr[2].data.data)
+        vm.results.push(responseArr[0].data.data)
+        vm.results.push(responseArr[1].data.data)
+        vm.results.push(responseArr[2].data.data)
         vm.loading = false;
+      }).catch(() => {
+        vm.giphyError = true;
       })
   },
   watch: {
@@ -50,6 +56,7 @@ export default {
       if(vm.timeout) clearTimeout(vm.timeout);
       vm.timeout = setTimeout(() => {
         vm.loading = true;
+        vm.giphyError = false;
         axios
           .get('https://api.giphy.com/v1/gifs/search?api_key=pzOvipitP62VH7uZ5TvR03vFr7NAiNN2',{
             params:{
@@ -58,7 +65,15 @@ export default {
           })
           .then(response => {
             if(response.data.data.length > 0) vm.results = response.data.data;
+            if(response.data.pagination.total_count==0){
+              vm.giphyError=true;
+              vm.errorText='No results found!';
+            }
             vm.loading = false;
+          })
+          .catch(() => {
+            vm.giphyError = true;
+            vm.errorText='There was an error fetching your gifs. Try again Later!'
           })
       }, 500);
     }
@@ -90,9 +105,11 @@ header{
   animation: spin 2s linear infinite;
   margin: 25px auto;
 }
-
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+.error{
+  color: red;
 }
 </style>

@@ -5,6 +5,7 @@
     <p v-if='giphyError' class='error'>{{ errorText }}</p>
     <SearchResults v-if='results' :results='results'/>
     <div v-if='loading' class='loader'></div>
+    <p v-if='endOfResults' class='error'>The End! <a href="#app">Jump to top of page</a></p>
   </div>
 </template>
 
@@ -23,6 +24,8 @@ export default {
     return{
       searchInput: '',
       results: [],
+      pagination: null,
+      endOfResults: false,
       loading: false,
       giphyError: false,
       errorText: '',
@@ -49,6 +52,7 @@ export default {
       }).catch(() => {
         vm.giphyError = true;
       })
+      this.scroll(this.results);
   },
   watch: {
     searchInput: function () {
@@ -64,7 +68,10 @@ export default {
             }
           })
           .then(response => {
-            if(response.data.data.length > 0) vm.results = response.data.data;
+            if(response.data.data.length > 0) {
+              vm.results = response.data.data;
+              vm.pagination = response.data.pagination;
+            }
             if(response.data.pagination.total_count==0){
               vm.giphyError=true;
               vm.errorText='No results found!';
@@ -78,6 +85,32 @@ export default {
       }, 500);
     }
   },
+  methods: {
+    scroll () {
+      const vm = this;
+      window.onscroll = () => {
+        let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+        if (bottomOfWindow && !vm.endOfResults) {
+          axios
+          .get('https://api.giphy.com/v1/gifs/search?api_key=pzOvipitP62VH7uZ5TvR03vFr7NAiNN2',{
+            params:{
+              q: this.searchInput,
+              offset: (vm.pagination.offset + vm.pagination.count)
+            }
+          })
+          .then(response => {
+            if(response.data.data.length > 0) {
+              response.data.data.map(item => vm.results.push(item))
+              vm.pagination = response.data.pagination;
+            }
+            this.loadingInfinity = false;
+          })
+        }
+        if((vm.pagination.count + vm.pagination.offset) >= vm.pagination.total_count) vm.endOfResults = true;
+        else vm.endOfResults = false;
+      };
+    },
+  }
 }
 </script>
 

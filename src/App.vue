@@ -61,6 +61,7 @@ export default {
       vm.timeout = setTimeout(() => {
         vm.loading = true;
         vm.giphyError = false;
+        vm.results = [];
         axios
           .get('https://api.giphy.com/v1/gifs/search?api_key=pzOvipitP62VH7uZ5TvR03vFr7NAiNN2',{
             params:{
@@ -69,7 +70,8 @@ export default {
           })
           .then(response => {
             if(response.data.data.length > 0) {
-              vm.results = response.data.data;
+              // take only the information we need from the api
+              response.data.data.map(({ id, title, url, images: { original: { mp4 } } }) => vm.results.push({ id, title, url, images: { original: { mp4 } } }))
               vm.pagination = response.data.pagination;
             }
             if(response.data.pagination.total_count==0){
@@ -100,7 +102,7 @@ export default {
           })
           .then(response => {
             if(response.data.data.length > 0) {
-              response.data.data.map(item => vm.results.push(item))
+              response.data.data.map(({ id, title, url, images: { original: { mp4 } } }) => vm.results.push({ id, title, url, images: { original: { mp4 } } }))
               vm.pagination = response.data.pagination;
             }
             this.loadingInfinity = false;
